@@ -23,3 +23,27 @@ def load_image(path: Path | str, grayscale: bool = False) -> ImageType:
 def img2np(img: ImageType) -> np.ndarray:
 	return np.array(img)
 
+
+def resize_img(img: ImageType, max_dim: int) -> ImageType:
+	"""
+	Resize image, so that the maximum dimension(width or height) is max_dim
+	"""
+	width, height = img.size
+	ar: float = width / height
+
+	new_height: int
+	new_width: int
+
+	# portrait image
+	if height > width:
+		new_height = max_dim
+		new_width = int(ar * new_height)
+	else:  # landscape image
+		new_width = max_dim
+		new_height = int(new_width / ar)
+
+	resized_img: ImageType = img.resize(
+		(new_width, new_height), Image.Resampling.LANCZOS
+	)
+
+	return resized_img
