@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 from PIL.Image import Image as ImageType
 
 
@@ -47,3 +47,26 @@ def resize_img(img: ImageType, max_dim: int) -> ImageType:
 	)
 
 	return resized_img
+
+
+def enhance_image(
+	img: ImageType,
+	contrast_factor: float = 1.5,
+	autocontrast: bool = True,
+	equalize: bool = True,
+	sharpen: bool = True,
+) -> ImageType:
+
+	if autocontrast:
+		img = ImageOps.autocontrast(img)
+
+	if equalize:
+		img = ImageOps.equalize(img)
+
+	# Adjust contrast
+	img = ImageEnhance.Contrast(img).enhance(contrast_factor)
+
+	if sharpen:
+		img = img.filter(ImageFilter.SHARPEN)
+
+	return img
