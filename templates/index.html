@@ -1,66 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>ASCII Art Generator</title>
-	<style>
-		body {
-			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-				Helvetica, Arial, sans-serif;
-			background-color: #f4f4f9;
-			color: #333;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			margin: 0;
-			padding: 2rem;
-		}
-
-		h1 {
-			color: #4a4a4a;
-		}
-
-		.container {
-			background: #fff;
-			padding: 2rem;
-			border-radius: 8px;
-			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-			width: 100%;
-			max-width: 600px;
-			text-align: center;
-		}
-
-		input[type="file"] {
-			margin-bottom: 1rem;
-		}
-
-		input[type="submit"] {
-			background-color: #007bff;
-			color: white;
-			border: none;
-			padding: 10px 20px;
-			border-radius: 5px;
-			cursor: pointer;
-			font-size: 1rem;
-		}
-
-		input[type="submit"]:hover {
-			background-color: #0056b3;
-		}
-	</style>
-</head>
-
-<body>
-	<div class="container">
-		<h1>Upload an Image to Convert</h1>
-		<form action="/upload" method="post" enctype="multipart/form-data">
-			<input type="file" name="image" accept="image/*" required />
-			<br />
-			<input type="submit" value="Generate ASCII Art" />
-		</form>
-	</div>
-</body>
-
-</html>
+{% block content %}
+<h1>Upload an Image to Convert</h1>
+<form action="/upload" method="post" enctype="multipart/form-data">
+	<input type="file" name="image" accept="image/*" required />
+	<br />
+	<input type="submit" value="Generate ASCII Art" />
+</form>
+{% endblock %}
