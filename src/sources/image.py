@@ -1,23 +1,26 @@
 from pathlib import Path
+from typing import IO
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 from PIL.Image import Image as ImageType
 
 
-def load_image(path: Path | str, grayscale: bool = False) -> ImageType:
-	image_path: Path = Path(path)
-	if not image_path.exists():
-		raise FileNotFoundError(f"{image_path} does not exist!")
-
+def load_image(source: Path | str | IO[bytes], grayscale: bool = False) -> ImageType:
+	"""
+	Loads an image from a file path or a file-like object (e.g., from an upload).
+	"""
 	try:
+		image: ImageType = Image.open(source)
 		if grayscale:
-			return Image.open(image_path).convert("L")
-		else:
-			return Image.open(image_path)
+			return image.convert("L")
 
+		return image
+
+	except FileNotFoundError:
+		raise FileNotFoundError(f"File not found at `{source}`")
 	except Exception as e:
-		raise FileNotFoundError(f"Failed to open {image_path}! : {e}")
+		raise IOError(f"Failed to open {source}! : {e}")
 
 
 def img2np(img: ImageType) -> np.ndarray:
@@ -47,3 +50,26 @@ def resize_img(img: ImageType, max_dim: int) -> ImageType:
 	)
 
 	return resized_img
+
+
+def enhance_image(
+	img: ImageType,
+	contrast_factor: float = 1.5,
+	autocontrast: bool = True,
+	equalize: bool = True,
+	sharpen: bool = True,
+) -> ImageType:
+
+	if autocontrast:
+		img = ImageOps.autocontrast(img)
+
+	if equalize:
+		img = ImageOps.equalize(img)
+
+	# Adjust contrast
+	img = ImageEnhance.Contrast(img).enhance(contrast_factor)
+
+	if sharpen:
+		img = img.filter(ImageFilter.SHARPEN)
+
+	return img
