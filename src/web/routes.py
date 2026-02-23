@@ -23,13 +23,11 @@ def upload():
 		return "No image selected!", 400
 
 	try:
-		ascii_mat = load_ascii_mat_from_image_file(
-			image_file.filename or "", max_dim=200
-		)
+		ascii_mat = load_ascii_mat_from_image_file(image_file.stream, max_dim=200)
 
 		ascii_str: str = "\n".join(" ".join(row) for row in ascii_mat) + "\n"
 		# The <pre> tag preserves whitespace and uses a monospace font.
-		return f"<pre>{ascii_str}</pre>"
+		return f'<pre style="font-size:2pt;">{ascii_str}</pre>'
 
 	except Exception as e:
 		# It's good practice to handle potential errors during processing
