@@ -1,10 +1,37 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Upload an Image to Convert</h1>
-<form action="/upload" method="post" enctype="multipart/form-data">
-	<input type="file" name="image" accept="image/*" required />
-	<br />
-	<input type="submit" value="Generate ASCII Art" />
-</form>
+<div class="main-container">
+	<header>
+		<h1>ASCII Art Generator</h1>
+		<p class="subtitle">
+			Upload an image and watch it transform into text-based art.
+		</p>
+	</header>
+
+	<!-- Upload form -->
+	<div class="card">
+		<form id="upload-form" enctype="multipart/form-data">
+			<label for="file-input" class="file-label">Choose an Image</label>
+			<input type="file" id="file-input" name="image" accept="image/*" required />
+			<p id="file-name"></p>
+			<input type="submit" value="Generate" />
+		</form>
+	</div>
+
+	<!-- Loading Spinner -->
+	<div class="loader"></div>
+
+	<!-- Result Card (initially hidden) -->
+	<div class="card" id="result-container">
+		<div class="result-header">
+			<h2>Output ASCII Art</h2>
+			<div class="button-group">
+				<button id="copy-btn" class="util-btn">Copy</button>
+				<button id="download-btn" class="util-btn">Download as .txt</button>
+			</div>
+		</div>
+		<pre id="ascii-art"></pre>
+	</div>
+</div>
 {% endblock %}
