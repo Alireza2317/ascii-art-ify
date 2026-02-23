@@ -1,8 +1,14 @@
-from flask import Blueprint, render_template, request
+from typing import TYPE_CHECKING
+
+from flask import Blueprint, jsonify, render_template, request
 
 from src.core.pipeline import load_ascii_mat_from_image_file
 
-main_blueprint = Blueprint("main", __name__)
+if TYPE_CHECKING:
+	import numpy as np
+
+
+main_blueprint: Blueprint = Blueprint("main", __name__)
 
 
 @main_blueprint.route("/")
@@ -23,13 +29,21 @@ def upload():
 		return "No image selected!", 400
 
 	try:
-		ascii_mat = load_ascii_mat_from_image_file(image_file.stream, max_dim=200)
+		ascii_mat: np.ndarray = load_ascii_mat_from_image_file(
+			image_file.stream, max_dim=244
+		)
 
-		ascii_str: str = "\n".join(" ".join(row) for row in ascii_mat) + "\n"
-		# The <pre> tag preserves whitespace and uses a monospace font.
-		return f'<pre style="font-size:2pt;">{ascii_str}</pre>'
+		# The frontend JavaScript will handle the rendering of this json
+		return jsonify({"art": ascii_mat.tolist()})
 
-	except Exception as e:
-		# It's good practice to handle potential errors during processing
+	except IOError as e:
+		# Handle specific, expected errors first
 		print(f"An error occurred: {e}")
-		return "Sorry, something went wrong while processing your image.", 500
+		return jsonify({"error": "Invalid or corrupted image file."}), 400
+	except Exception as e:
+		# Handle unexpected server errors
+		print(f"An error occurred: {e}")
+		return (
+			jsonify({"error": "Sorry, something went wrong processing your image."}),
+			500,
+		)

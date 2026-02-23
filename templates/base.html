@@ -2,26 +2,17 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<title>ASCII-art-ify</title>
-	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>ASCII Art Generator</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 
 <body>
-	<header>
-		<h1>ASCII Art</h1>
-	</header>
-	<nav>
-		<ul>
-			<li><a href="/" class="{% if active_page == 'index' %}nav-active{% endif %}">Home</a></li>
-			<!-- <li><a href="/upload" class="{% if active_page == 'upload' %}nav-active{% endif %}">Upload Data</a></li> -->
-		</ul>
-	</nav>
-	<div class="container">
-		<div class="content">
-			{% block content %}{% endblock %}
-		</div>
-	</div>
+	{% block content %}{% endblock %}
+
+	<script src="{{ url_for('static', filename='script.js') }}"></script>
 	{% block page_scripts %}{% endblock %}
 </body>
+
 </html>
